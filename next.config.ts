@@ -77,6 +77,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   cacheComponents: enableCacheComponents,
   cacheLife: cacheLifeProfiles,
+  reactCompiler: true, // React Compiler 会自动缓存组件，无需任何手动代码更改即可减少不必要的重新渲染
   // experimental features
   experimental: {
     // enable progressive page rendering (PPR) - requires canary version
@@ -103,6 +104,7 @@ const nextConfig: NextConfig = {
       '@radix-ui/react-slot',
       'class-variance-authority',
     ],
+    turbopackFileSystemCacheForDev: true, // dev file cache
   },
   // configure image optimization
   images: {

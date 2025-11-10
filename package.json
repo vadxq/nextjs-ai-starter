@@ -52,6 +52,7 @@
     "prettier-plugin-tailwindcss": "^0.7.1",
     "pretty-quick": "^4.2.2",
     "tailwindcss": "^4.1.17",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "babel-plugin-react-compiler": "^1.0.0"
   }
 }
