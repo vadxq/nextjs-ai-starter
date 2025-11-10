@@ -6,6 +6,12 @@
     "getStarted": "Get Started",
     "learnMore": "View on GitHub",
     "openSource": "🎉 Open Source & Free",
+    "stats": {
+      "features": "Core features",
+      "typeSafe": "Type safety",
+      "locales": "Languages supported",
+      "support": "Open source support"
+    },
     "features": {
       "ai": {
         "title": "AI-Powered",

@@ -6,6 +6,12 @@
     "getStarted": "开始使用",
     "learnMore": "查看GitHub",
     "openSource": "🎉 开源免费",
+    "stats": {
+      "features": "核心特性",
+      "typeSafe": "类型安全",
+      "locales": "语言支持",
+      "support": "社区维护"
+    },
     "features": {
       "ai": {
         "title": "AI驱动",

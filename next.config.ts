@@ -2,14 +2,72 @@ import type { NextConfig } from 'next';
 import withSerwistInit from '@serwist/next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
+const isProd = process.env.NODE_ENV === 'production';
+const cacheComponentsFlag = process.env.NEXT_CACHE_COMPONENTS;
+const enableCacheComponents = cacheComponentsFlag === 'true';
 const revision = crypto.randomUUID();
 
+const cacheLifeProfiles: NonNullable<NextConfig['cacheLife']> = {
+  default: {
+    stale: 60 * 5,
+    revalidate: 60 * 15,
+    expire: 60 * 60 * 24 * 30,
+  },
+  seconds: {
+    stale: 30,
+    revalidate: 1,
+    expire: 60,
+  },
+  minutes: {
+    stale: 60 * 5,
+    revalidate: 60,
+    expire: 60 * 60,
+  },
+  hours: {
+    stale: 60 * 5,
+    revalidate: 60 * 60,
+    expire: 60 * 60 * 24,
+  },
+  days: {
+    stale: 60 * 5,
+    revalidate: 60 * 60 * 24,
+    expire: 60 * 60 * 24 * 7,
+  },
+  weeks: {
+    stale: 60 * 5,
+    revalidate: 60 * 60 * 24 * 7,
+    expire: 60 * 60 * 24 * 30,
+  },
+  max: {
+    stale: 60 * 5,
+    revalidate: 60 * 60 * 24 * 30,
+    expire: 60 * 60 * 24 * 365,
+  },
+  mutation: {
+    expire: 0,
+  },
+};
+
+const remoteImageHosts = (process.env.NEXT_IMAGE_HOSTS ?? 'assets.vercel.com,images.unsplash.com')
+  .split(',')
+  .map((host) => host.trim())
+  .filter(Boolean);
+
+const remoteImagePatterns: NonNullable<NextConfig['images']>['remotePatterns'] =
+  remoteImageHosts.length > 0
+    ? remoteImageHosts.map((hostname) => ({
+        protocol: 'https',
+        hostname,
+        pathname: '/**',
+      }))
+    : [];
+
 const withSerwist = withSerwistInit({
-  cacheOnNavigation: true,
+  cacheOnNavigation: isProd,
   swSrc: 'app/sw.ts',
   swDest: 'public/sw.js',
   additionalPrecacheEntries: [{ url: '/~offline', revision }],
-  disable: process.env.NODE_ENV === 'development',
+  disable: !isProd,
 });
 
 const withNextIntl = createNextIntlPlugin('./lib/i18n/request.ts');
@@ -17,6 +75,8 @@ const withNextIntl = createNextIntlPlugin('./lib/i18n/request.ts');
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
+  cacheComponents: enableCacheComponents,
+  cacheLife: cacheLifeProfiles,
   // experimental features
   experimental: {
     // enable progressive page rendering (PPR) - requires canary version
@@ -47,12 +107,7 @@ const nextConfig: NextConfig = {
   // configure image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    remotePatterns: remoteImagePatterns,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     minimumCacheTTL: 60 * 60 * 24 * 7, // 7 days
   },

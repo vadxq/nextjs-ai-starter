@@ -1,5 +1,3 @@
-'use server';
-
 // lib/http/server.ts - server-side functions
 import { revalidateTag, revalidatePath, unstable_cache } from 'next/cache';
 import { fetchAPI, FetchOptions } from './fetch';
@@ -11,8 +9,17 @@ export interface CacheOptions {
   revalidate?: number | false;
 }
 
+type CacheProfile = string | { expire?: number };
+
+interface InvalidateOptions {
+  isPath?: boolean;
+  profile?: CacheProfile;
+}
+
+const DEFAULT_CACHE_PROFILE: CacheProfile = 'mutation';
+
 // cache utility function - create reusable cached data fetching function
-export async function createCachedQuery<T>(queryFn: () => Promise<T>, options: CacheOptions) {
+export function createCachedQuery<T>(queryFn: () => Promise<T>, options: CacheOptions) {
   return unstable_cache(queryFn, options.key, {
     revalidate: options.revalidate,
     tags: options.tags,
@@ -20,11 +27,15 @@ export async function createCachedQuery<T>(queryFn: () => Promise<T>, options: C
 }
 
 // revalidate data
-export async function invalidateData(tagOrPath: string, isPath: boolean = false) {
+export async function invalidateData(tagOrPath: string, options: InvalidateOptions | boolean = {}) {
+  const normalizedOptions: InvalidateOptions = typeof options === 'boolean' ? { isPath: options } : options;
+
+  const { isPath = false, profile = DEFAULT_CACHE_PROFILE } = normalizedOptions;
+
   if (isPath) {
     revalidatePath(tagOrPath);
   } else {
-    revalidateTag(tagOrPath);
+    revalidateTag(tagOrPath, profile);
   }
 }
 

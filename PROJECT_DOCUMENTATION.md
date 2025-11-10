@@ -12,6 +12,7 @@
 - 🔧 **类型安全**: 100% TypeScript 支持
 - ⚡ **性能优化**: 服务器组件、边缘运行时、智能缓存
 - 📱 **PWA 支持**: 离线功能和原生应用体验
+- ♻️ **缓存体系**: 基于 Next.js 16 Cache Components 与新版缓存 API（updateTag / revalidateTag profiles）
 
 ---
 
@@ -19,9 +20,9 @@
 
 ### 前端框架
 
-- **Next.js 15** - 最新的 React 全栈框架，使用 App Router
-- **React 19** - 最新的 React 版本，支持新特性
-- **TypeScript 5.8** - 静态类型检查和代码提示
+- **Next.js 16** - 最新的 React 全栈框架（App Router、Cache Components、Turbopack 默认开启、`proxy.ts` 路由）
+- **React 19.2** - 支持 View Transitions、`useEffectEvent` 等新特性
+- **TypeScript 5.9** - 满足 Next.js 16（≥5.1）的类型要求
 
 ### 样式和 UI
 
@@ -45,7 +46,9 @@
 
 ### PWA 和性能
 
-- **Serwist 9.0** - 下一代 Service Worker 库
+- **Serwist 9.2** - 下一代 Service Worker 库
+- **Cache Components + 新缓存 API** - 细粒度失效、`updateTag`/`revalidateTag(profile)`
+- **Turbopack + optimizePackageImports** - Next.js 16 默认构建体验
 - **Web Vitals 监控** - 性能指标收集
 - **图像优化** - 支持 AVIF/WebP 格式
 
@@ -119,9 +122,12 @@ nextjs-ai-starter/
 - **类型安全**: TypeScript 支持的翻译键检查
 
 ```tsx
-// 使用示例
-const t = useTranslations('homePage');
-const title = t('title'); // 类型安全的翻译
+import { getTranslations } from 'next-intl/server';
+
+export default async function Example() {
+  const t = await getTranslations('homePage');
+  return <h1>{t('title')}</h1>;
+}
 ```
 
 ### 3. 📱 PWA 功能
@@ -165,7 +171,7 @@ const users = await createCachedQuery(() => api.get('/users'), {
 
 ### 1. 环境要求
 
-- Node.js 22+
+- Node.js 20.9+（Next.js 16 官方最低版本，建议使用 LTS 20/22）
 - Git
 
 ### 2. 安装和启动
@@ -216,7 +222,8 @@ export const routing = defineRouting({
 ```
 
 2. 创建语言文件 `locales/ja.json`
-3. 在 `middleware.ts` 中更新路由匹配规则
+3. 在 `proxy.ts`（Next.js 16 新命名）中更新路由匹配规则
+4. 在 `app/[locale]/layout.tsx` 的 `generateStaticParams` 中加入新的语言代码，保证静态预渲染与缓存策略一致
 
 ### 2. 创建新组件
 
@@ -261,6 +268,11 @@ DATABASE_URL=postgresql://...
 
 # AI 服务配置
 OPENAI_API_KEY=sk-...
+
+# Next.js 渲染优化
+NEXT_CACHE_COMPONENTS=true
+# 允许的远程图片域名，逗号分隔
+NEXT_IMAGE_HOSTS=assets.vercel.com,images.unsplash.com
 ```
 
 ---
@@ -440,8 +452,8 @@ chore: 构建过程或辅助工具的变动
 
 ### 官方文档
 
-- [Next.js 15 文档](https://nextjs.org/docs)
-- [React 19 文档](https://react.dev)
+- [Next.js 16 文档](https://nextjs.org/docs)
+- [React 19.2 文档](https://react.dev)
 - [Tailwind CSS 文档](https://tailwindcss.com/docs)
 - [Shadcn UI 文档](https://ui.shadcn.com)
 

@@ -78,7 +78,7 @@ function UserComponent() {
 ### 2. 服务端组件和Server Actions
 
 ```tsx
-import { createServerApi, createCachedQuery, invalidateData } from '~/lib/http';
+import { createServerApi, createCachedQuery, invalidateData } from '~/lib/http/server';
 
 // 创建服务端API客户端
 const serverApi = createServerApi();
@@ -133,7 +133,7 @@ export async function createUser(formData: FormData) {
 
 - `fetchAPI<T>(url, options)` - 获取或提交数据
 - `createCachedQuery<T>(queryFn, options)` - 创建缓存查询
-- `invalidateData(tagOrPath, isPath)` - 重新验证数据
+- `invalidateData(tagOrPath, options?)` - 重新验证标签或路径缓存。`options` 接受 `{ isPath?: boolean; profile?: string | { expire?: number } }`，默认使用在 `next.config.ts` 中配置的 `'mutation'` 缓存策略，仍兼容旧的布尔写法。
 - `createServerApi(baseUrl)` - 创建服务端API客户端
 
 ## 错误处理
@@ -164,4 +164,4 @@ try {
 2. 为每个资源类型创建专用的API客户端
 3. 利用TypeScript类型系统确保类型安全
 4. 在服务端组件中使用`createCachedQuery`提高性能
-5. 使用`invalidateData`在数据变更后重新验证缓存
+5. 使用带有 `profile` / `isPath` 选项的 `invalidateData` 在数据变更后重新验证缓存，并复用全局 `cacheLife` 策略

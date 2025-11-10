@@ -78,7 +78,7 @@ function UserComponent() {
 ### 2. Server Components and Server Actions
 
 ```tsx
-import { createServerApi, createCachedQuery, invalidateData } from '~/lib/http';
+import { createServerApi, createCachedQuery, invalidateData } from '~/lib/http/server';
 
 // Create server API client
 const serverApi = createServerApi();
@@ -133,7 +133,7 @@ export async function createUser(formData: FormData) {
 
 - `fetchAPI<T>(url, options)` - Fetch or submit data
 - `createCachedQuery<T>(queryFn, options)` - Create cached query
-- `invalidateData(tagOrPath, isPath)` - Revalidate data
+- `invalidateData(tagOrPath, options?)` - Revalidate cache tags or paths. `options` accepts `{ isPath?: boolean; profile?: string | { expire?: number } }` with a default tag profile of `'mutation'` (configured in `next.config.ts`). A deprecated boolean is still supported for backwards compatibility.
 - `createServerApi(baseUrl)` - Create server API client
 
 ## Error Handling
@@ -164,4 +164,4 @@ try {
 2. Create dedicated API clients for each resource type
 3. Leverage TypeScript's type system to ensure type safety
 4. Use `createCachedQuery` in server components to improve performance
-5. Use `invalidateData` to revalidate cache after data changes
+5. Use `invalidateData` (with optional `profile` / `isPath`) to revalidate cache after data changes, leveraging the shared `cacheLife` profiles

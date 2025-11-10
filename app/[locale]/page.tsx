@@ -1,5 +1,4 @@
 import { Button } from '~/components/ui/button';
-import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import PageLayout from '~/components/layout/pageLayout';
 import { ArrowRight, Sparkles, Globe, Rocket, Brain, Layers, Github, Star } from 'lucide-react';
@@ -15,8 +14,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
-export default function Home() {
-  const t = useTranslations('homePage');
+export default async function Home() {
+  const t = await getTranslations('homePage');
 
   const features = [
     {
@@ -103,10 +102,10 @@ export default function Home() {
               {/* 统计数据 */}
               <div className="grid grid-cols-2 gap-8 pt-16 md:grid-cols-4">
                 {[
-                  { number: '15+', label: '核心特性' },
-                  { number: '99.9%', label: '类型安全' },
-                  { number: '2', label: '语言支持' },
-                  { number: '24/7', label: '开源维护' },
+                  { number: '15+', label: t('stats.features') },
+                  { number: '99.9%', label: t('stats.typeSafe') },
+                  { number: '2', label: t('stats.locales') },
+                  { number: '24/7', label: t('stats.support') },
                 ].map((stat, index) => (
                   <div key={index} className="space-y-2">
                     <div className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-3xl font-bold text-transparent md:text-4xl">{stat.number}</div>

@@ -3,7 +3,7 @@
 
 import { SWRConfig } from 'swr';
 import { ReactNode } from 'react';
-import { fetchAPI } from '~/lib/http';
+import { fetchAPI } from '~/lib/http/fetch';
 
 export function SWRProvider({ children }: { children: ReactNode }) {
   return (
