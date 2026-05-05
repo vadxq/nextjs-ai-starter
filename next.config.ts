@@ -1,11 +1,9 @@
 import type { NextConfig } from 'next';
-import withSerwistInit from '@serwist/next';
+import { withSerwist } from '@serwist/turbopack';
 import createNextIntlPlugin from 'next-intl/plugin';
 
-const isProd = process.env.NODE_ENV === 'production';
 const cacheComponentsFlag = process.env.NEXT_CACHE_COMPONENTS;
 const enableCacheComponents = cacheComponentsFlag === 'true';
-const revision = crypto.randomUUID();
 
 const cacheLifeProfiles: NonNullable<NextConfig['cacheLife']> = {
   default: {
@@ -61,14 +59,6 @@ const remoteImagePatterns: NonNullable<NextConfig['images']>['remotePatterns'] =
         pathname: '/**',
       }))
     : [];
-
-const withSerwist = withSerwistInit({
-  cacheOnNavigation: isProd,
-  swSrc: 'app/sw.ts',
-  swDest: 'public/sw.js',
-  additionalPrecacheEntries: [{ url: '/~offline', revision }],
-  disable: !isProd,
-});
 
 const withNextIntl = createNextIntlPlugin('./lib/i18n/request.ts');
 

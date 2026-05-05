@@ -1,0 +1,30 @@
+{
+  "task": "排查升级 serwist 后 Next.js 16 Turbopack 编译卡住与 panic",
+  "findings": [
+    {
+      "type": "entrypoints",
+      "items": [
+        "next.config.ts 使用 @serwist/turbopack 的 withSerwist 包装 Next 配置",
+        "app/serwist/[path]/route.ts 使用 createSerwistRoute 构建 Service Worker 路由",
+        "components/provider/pwaProvider.tsx 使用 @serwist/turbopack/react 的 SerwistProvider",
+        "app/[locale]/layout.tsx 将 PWAProvider 接入全局布局"
+      ]
+    },
+    {
+      "type": "risks",
+      "items": [
+        "route.ts 顶层 crypto.randomUUID() 让 additionalPrecacheEntries.revision 非确定化，可能导致 Turbopack 失效重编译",
+        "createSerwistRoute 收到了 cacheOnNavigation/disable 这类不属于 @serwist/turbopack route 选项的字段",
+        "依赖升级同时包含 lucide-react 1.x，旧图标命名已失效，会阻塞类型检查与构建"
+      ]
+    },
+    {
+      "type": "verification",
+      "items": [
+        "本地日志 .next/dev/logs/next-development.log 显示卡在 Compiling /[locale]",
+        "TypeScript 检查确认 route.ts 存在多余字段错误",
+        "当前沙箱不允许监听 3000 端口，dev server 无法在此会话完整启动"
+      ]
+    }
+  ]
+}

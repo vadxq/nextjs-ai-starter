@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Github, Twitter, Linkedin, Mail, Send, Zap, ArrowUp, Heart } from 'lucide-react';
+import { GitBranch, MessagesSquare, BriefcaseBusiness, Mail, Send, Zap, ArrowUp, Heart } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 
@@ -65,9 +65,9 @@ export default function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'GitHub', icon: Github, href: 'https://github.com/vadxq', color: 'hover:text-gray-900 dark:hover:text-white' },
-    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/vadxqDon', color: 'hover:text-blue-500' },
-    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com', color: 'hover:text-blue-600' },
+    { name: 'GitHub', icon: GitBranch, href: 'https://github.com/vadxq', color: 'hover:text-gray-900 dark:hover:text-white' },
+    { name: 'Twitter', icon: MessagesSquare, href: 'https://twitter.com/vadxqDon', color: 'hover:text-blue-500' },
+    { name: 'LinkedIn', icon: BriefcaseBusiness, href: 'https://linkedin.com', color: 'hover:text-blue-600' },
     { name: 'Email', icon: Mail, href: 'mailto:dxl@vadxq.com', color: 'hover:text-green-500' },
   ];
 

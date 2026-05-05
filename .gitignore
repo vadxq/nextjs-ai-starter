@@ -48,3 +48,5 @@ bun.lock
 # Serwist
 public/sw*
 public/swe-worker*
+
+.codex

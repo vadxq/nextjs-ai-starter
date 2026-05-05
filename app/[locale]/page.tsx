@@ -1,7 +1,7 @@
 import { Button } from '~/components/ui/button';
 import { getTranslations } from 'next-intl/server';
 import PageLayout from '~/components/layout/pageLayout';
-import { ArrowRight, Sparkles, Globe, Rocket, Brain, Layers, Github, Star } from 'lucide-react';
+import { ArrowRight, Sparkles, Globe, Rocket, Brain, Layers, GitBranch, Star } from 'lucide-react';
 import Link from 'next/link';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -91,7 +91,7 @@ export default async function Home() {
                 <Button variant="outline" size="lg" className="group liquid-glass-button-secondary" asChild>
                   <Link href="https://github.com/vadxq/nextjs-ai-starter" target="_blank" rel="noopener noreferrer">
                     <span className="flex items-center space-x-2">
-                      <Github className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
+                      <GitBranch className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
                       <span>{t('learnMore')}</span>
                       <Star className="h-3 w-3 opacity-60" />
                     </span>
@@ -176,7 +176,7 @@ export default async function Home() {
                 <Button variant="outline" size="lg" className="group liquid-glass-button-secondary" asChild>
                   <Link href="https://github.com" target="_blank" rel="noopener noreferrer">
                     <span className="flex items-center space-x-2">
-                      <Github className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
+                      <GitBranch className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
                       <span>查看源码</span>
                     </span>
                   </Link>

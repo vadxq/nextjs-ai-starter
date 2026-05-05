@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
-import { Menu, X, Search, Bell, User, Settings, Zap, Github } from 'lucide-react';
+import { Menu, X, Search, Bell, User, Settings, Zap, GitBranch } from 'lucide-react';
 import { Button } from '~/components/ui/button';
 import { ThemeToggle } from '~/components/themeToggle';
 import LocaleSwitcher from '~/components/langSelect/localeSwitcher';
@@ -88,7 +88,7 @@ export default function Header() {
                 {/* GitHub按钮 */}
                 <Button variant="ghost" size="icon" className="liquid-glass-button" asChild>
                   <Link href="https://github.com/vadxq/nextjs-ai-starter" target="_blank" rel="noopener noreferrer">
-                    <Github className="h-4 w-4" />
+                    <GitBranch className="h-4 w-4" />
                   </Link>
                 </Button>
 

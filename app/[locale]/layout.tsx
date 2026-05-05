@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import Script from 'next/script';
 import { Suspense } from 'react';
 import '~/styles/globals.css';
 import { Toaster } from '~/components/ui/sonner';
@@ -9,6 +10,7 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { SWRProvider } from '~/components/provider/swrProvider';
+import { PWAProvider } from '~/components/provider/pwaProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,6 +29,21 @@ const THEME_COLORS = [
   { media: '(prefers-color-scheme: light)', color: 'white' },
   { media: '(prefers-color-scheme: dark)', color: '#141414' },
 ];
+
+const THEME_INIT_SCRIPT = `
+  try {
+    (function() {
+      var savedTheme = localStorage.getItem('theme')
+      var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      var theme = savedTheme || 'system'
+      var resolved = theme === 'system' ? (systemDark ? 'dark' : 'light') : theme
+      document.documentElement.classList.add(resolved)
+      document.documentElement.style.colorScheme = resolved
+    })()
+  } catch (e) {
+    console.error(e)
+  }
+`;
 
 export const metadata: Metadata = {
   title: {
@@ -63,22 +80,9 @@ export default async function LocaleLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* prevent flashing */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                (function() {
-                  var savedTheme = localStorage.getItem('theme')
-                  var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-                  var theme = savedTheme || 'system'
-                  var resolved = theme === 'system' ? (systemDark ? 'dark' : 'light') : theme
-                  document.documentElement.classList.add(resolved)
-                  document.documentElement.style.colorScheme = resolved
-                })()
-              } catch(e) { console.error(e) }
-            `,
-          }}
-        />
+        <Script id="theme-init" strategy="beforeInteractive">
+          {THEME_INIT_SCRIPT}
+        </Script>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Suspense fallback={<AppProvidersFallback />}>
@@ -100,12 +104,14 @@ async function AppProviders({ children }: { children: React.ReactNode }) {
 
   return (
     <NextIntlClientProvider messages={messages}>
-      <ThemeProvider>
-        <SWRProvider>
-          {children}
-          <Toaster />
-        </SWRProvider>
-      </ThemeProvider>
+      <PWAProvider>
+        <ThemeProvider>
+          <SWRProvider>
+            {children}
+            <Toaster />
+          </SWRProvider>
+        </ThemeProvider>
+      </PWAProvider>
     </NextIntlClientProvider>
   );
 }
